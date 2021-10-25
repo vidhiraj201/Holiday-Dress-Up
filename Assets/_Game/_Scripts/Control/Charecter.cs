@@ -13,12 +13,6 @@ namespace HDU.Control
         public bool UpperTorso;
         public bool LowerTorso;
 
-        
-        [Header(" ")]
-        public Collider Head;
-        public Collider Upper;
-        public Collider Lower;
-
         public GameObject SmokeFuff;
 
         public Charecter otherCharacter;
@@ -28,9 +22,8 @@ namespace HDU.Control
 
 
 
-        [HideInInspector]public bool MaleCloth;
-        [HideInInspector]public bool FemaleCloth;
-        [HideInInspector]public wearableObject WO;
+        public bool MaleCloth;
+        public bool FemaleCloth;
         [HideInInspector]public Animator Animation;
         [HideInInspector]public int PlaceingNumber;
         [HideInInspector]public int countCloth;
@@ -79,28 +72,11 @@ namespace HDU.Control
                     Animation.SetTrigger("ch");
                 }
             }
-            if(WO != null)
-            {
-                if (WO.isMale)
-                    MaleCloth = true;
-                if (WO.isFemale)
-                    FemaleCloth = true;
-            }
             
         }
-
-
-        private void OnTriggerStay(Collider other)
-        {
-            if (Input.GetMouseButtonUp(0))
-            {
-                checkFM(other);
-            }
-        }
-        void checkFM(Collider other)// check Cloth is male or female
+        public void checkFM()// check Cloth is male or female
         {
 
-            WO = other.gameObject.GetComponent<wearableObject>();
             if (!walkahead)
             {
                 Animation.Play("Walking");

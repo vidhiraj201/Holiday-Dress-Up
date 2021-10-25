@@ -17,12 +17,12 @@ TagManager:
   - Male
   - Female
   - MovabelObject
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - C_Head
+  - C_Upper
+  - C_Lower
+  - P_Head
+  - P_Upper
+  - P_Lower
   - 
   - 
   - 

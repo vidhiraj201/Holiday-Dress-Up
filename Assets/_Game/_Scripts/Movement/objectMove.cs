@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HDU.Control;
 
 namespace HDU.Movement
 {
@@ -8,7 +9,9 @@ namespace HDU.Movement
     {
         private Vector3 mOffset;
         private float mZCoord;
+        private GameObject selectedObject;
 
+        public LayerMask layer;
         public bool isMoving = false;
         private void Update()
         {
@@ -16,10 +19,11 @@ namespace HDU.Movement
             {
                 transform.position = GetMouseAsWorldPoint() + mOffset;
             }
+            raycastDragObject();
         }
         void OnMouseDown()
         {
-            isMoving = true;
+            
             mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
             // Store offset = gameobject world pos - mouse world pos
             mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
@@ -42,36 +46,33 @@ namespace HDU.Movement
             return Camera.main.ScreenToWorldPoint(mousePoint);
         }
 
-        /*void raycastDragObject()
+        void raycastDragObject()
         {
-            if (Input.GetMouseButtonDown(0))
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Input.GetMouseButton(0))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, draggableMask))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer))
                 {
+                    isMoving = true;
                     if (hit.collider != null)
                     {
-                        Debug.Log("Hit");
-                        selectedObject = hit.collider.gameObject;
-                        isMoving = true;
+                        selectedObject = hit.transform.gameObject;
+                        if (selectedObject.GetComponent<wearableObject>() != null && selectedObject.GetComponent<wearableObject>().isDummy)
+                        {
+                            if (selectedObject.GetComponent<wearableObject>().rePosition)
+                            {
+                                print("Working");
+                                selectedObject.GetComponent<wearableObject>().AfterRemovingCloth();
+                                selectedObject.GetComponent<wearableObject>().rePosition = false;
+                                print("Working_1");
+                            }
+                        }
                     }
                 }
             }
 
-            if (isMoving)
-            {
-                Vector3 pos = mousePos();
-
-                selectedObject.transform.position = pos;
-            }
-            if (Input.GetMouseButtonUp(0))
-                isMoving = false;
         }
 
-        Vector3 mousePos()
-        {
-            return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Mathf.Infinity));
-        }*/
     }
 }

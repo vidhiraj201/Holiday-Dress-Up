@@ -1,89 +1,192 @@
 ﻿using UnityEngine;
 using HDU.Core;
+using HDU.Movement;
 
 namespace HDU.Control
 {
     public class wearableObject : MonoBehaviour
     {
 
-        public enum Type { Hoodie, Jacket, Tanktop, Shoe, Shorts, Pants, Tights, Tshirt, Underpants, Underwear }
-        public Type wearingType;
+        /*public enum Type { Hoodie, Jacket, Tanktop, Shoe, Shorts, Pants, Tights, Tshirt, Underpants, Underwear }
+        public Type wearingType;*/
 
         public enum PlacingPosition { Headgear, UpperTorso, LowerTorso, AP }
         public PlacingPosition placingPosition;
 
         public Charecter characterData;
-
+        public wearableObject WO;
         private SkinnedMeshRenderer SMR;
+        private MeshRenderer MR;
 
         public bool isDummy = false;
+        public bool rePosition = false;
+        public bool isClothPlaced = false;
 
+        
 
         public bool isFemale = false;
         public bool isMale = false;
 
+        public Vector3 PlacingPostion;
         public Vector3 PuffOffset;
+
+        private Vector3 initPosition;
 
         // Start is called before the first frame update
         void Start()
         {
-            SMR = transform.GetComponent<SkinnedMeshRenderer>();
+            if(!isDummy)
+                SMR = transform.GetComponent<SkinnedMeshRenderer>();
+
+            if (isDummy)
+                MR = transform.GetComponent<MeshRenderer>();
+
+            initPosition = transform.position;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (!isDummy)
+            /*            if (!isDummy)
+                            clothCheck();*/
+
+            if (Input.GetMouseButtonUp(0))
+            {
                 clothCheck();
+            }
+            
+            if (isDummy && !transform.GetComponent<objectMove>().isMoving && WO == null)
+            {
+                ResetPosition();
+            }
         }
 
 
-        void clothCheck()
+        public void clothCheck()
         {
-            
-            if (characterData.WO == null)
-                    return;
+            if (WO == null)
+                return;
 
-                if (characterData.WO.wearingType == this.wearingType)
+            if (!WO.isClothPlaced && WO.placingPosition == this.placingPosition)
+            {
+                if (this.transform.name == WO.transform.name)
                 {
-                    if (this.transform.name == characterData.WO.transform.name)
-                    {
-                        SMR.enabled = true;
-                        characterData.Animation.SetTrigger("place");
-                    if(characterData.WO.isFemale == isFemale || characterData.WO.isMale == isMale)
-                    {
-                        if (placingPosition == PlacingPosition.Headgear) { 
-                            characterData.Headgear = true;
-                            characterData.Head.enabled = false;
-                        }
-                        if (placingPosition == PlacingPosition.UpperTorso)
-                        {
-                            characterData.UpperTorso = true;
-                            //characterData.Upper.enabled = false;
+                    WO.SMR.enabled = true;
+                    WO.isClothPlaced = true;
+                    WO.characterData.Animation.SetTrigger("place");
 
-                        }
-                        if (placingPosition == PlacingPosition.LowerTorso)
-                        {
-                            characterData.LowerTorso = true;
-                            characterData.Lower.enabled = false;
-                        }
-                    }
+                    if (isFemale)
+                        WO.characterData.FemaleCloth = true;
+                    if (isMale)
+                        WO.characterData.MaleCloth = true;
 
-                    if (characterData.WO.isFemale != isFemale || characterData.WO.isMale != isMale)
+
+                    if (WO.isFemale == isFemale || WO.isMale == isMale)
                     {
                         if (placingPosition == PlacingPosition.Headgear)
-                            characterData.Headgear = false;
+                        {
+                            WO.characterData.Headgear = true;
+                        }
                         if (placingPosition == PlacingPosition.UpperTorso)
-                            characterData.UpperTorso = false;
+                        {
+                            WO.characterData.UpperTorso = true;
+
+                        }
                         if (placingPosition == PlacingPosition.LowerTorso)
-                            characterData.LowerTorso = false;
+                        {
+                            WO.characterData.LowerTorso = true;
+                        }
                     }
 
-                    Destroy(Instantiate(characterData.SmokeFuff, transform.position + PuffOffset, Quaternion.identity), 2f);
-                    Destroy(characterData.WO.gameObject);
-                    characterData.WO.GetComponent<MeshRenderer>().enabled = false;
+                    if (WO.isFemale != isFemale || WO.isMale != isMale)
+                    {
+                        if (placingPosition == PlacingPosition.Headgear)
+                            WO.characterData.Headgear = false;
+                        if (placingPosition == PlacingPosition.UpperTorso)
+                            WO.characterData.UpperTorso = false;
+                        if (placingPosition == PlacingPosition.LowerTorso)
+                            WO.characterData.LowerTorso = false;
                     }
+
+                    Destroy(Instantiate(WO.characterData.SmokeFuff, transform.position + PuffOffset, Quaternion.identity), 2f);
+                    transform.GetComponent<Collider>().isTrigger = false;
+                    MR.enabled = false;
+                    rePosition = true;
+                    
+                }
             }
+        }
+
+        public void clothRemoved()
+        {
+            if (WO == null)
+                return;
+
+            if (WO.isClothPlaced && WO.placingPosition == this.placingPosition)
+            {
+                if (this.transform.name == WO.transform.name)
+                {
+                    WO.SMR.enabled = false;
+                    WO.isClothPlaced = false ;
+                    /*WO.characterData.Animation.SetTrigger("place");*/
+                    if (WO.isFemale == isFemale || WO.isMale == isMale)
+                    {
+                        if (placingPosition == PlacingPosition.Headgear)
+                        {
+                            WO.characterData.Headgear = false;
+                        }
+                        if (placingPosition == PlacingPosition.UpperTorso)
+                        {
+                            WO.characterData.UpperTorso = false;
+
+                        }
+                        if (placingPosition == PlacingPosition.LowerTorso)
+                        {
+                            WO.characterData.LowerTorso = false;
+                        }
+                    }
+
+                    if (WO.isFemale != isFemale || WO.isMale != isMale)
+                    {
+                        if (placingPosition == PlacingPosition.Headgear)
+                            WO.characterData.Headgear = true;
+                        if (placingPosition == PlacingPosition.UpperTorso)
+                            WO.characterData.UpperTorso = true;
+                        if (placingPosition == PlacingPosition.LowerTorso)
+                            WO.characterData.LowerTorso = true;
+                    }
+                }
+            }
+        }
+
+        public void AfterRemovingCloth()
+        {
+            clothRemoved();
+            MR.enabled = true;
+            transform.GetComponent<Collider>().isTrigger = true;
+        }
+
+        public void ResetPosition()
+        {            
+            transform.position = initPosition;
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            WO = other.GetComponent<wearableObject>();
+
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (transform.GetComponent<objectMove>().isMoving)
+                WO = null;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!transform.GetComponent<objectMove>().isMoving && other.gameObject.CompareTag("Rack")) ;
+                ResetPosition();
         }
     }
 }
