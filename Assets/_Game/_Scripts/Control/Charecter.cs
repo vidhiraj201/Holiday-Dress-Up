@@ -90,7 +90,24 @@ namespace HDU.Control
                 walkahead = true;
             }
         }
+
+        public void resetAnimation()
+        {
+            if (walkahead)
+            {
+                otherCharacter.transform.parent.GetComponent<Animator>().Play("Walking");
+                if (Animation.GetCurrentAnimatorStateInfo(0).IsName("IN"))
+                {
+                    Animation.SetBool("out", true);
+                    Animation.SetBool("in", false);
+                }
+                if (!Animation.GetCurrentAnimatorStateInfo(0).IsName("IN"))
+                    Animation.SetBool("in", true);
+                walkahead = false;
+            }
+        }
     }
+
 }
 
 

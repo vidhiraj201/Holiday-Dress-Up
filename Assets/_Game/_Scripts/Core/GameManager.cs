@@ -18,9 +18,15 @@ namespace HDU.Core
         public bool FUpperTorso;
         public bool FLowerTorso;
 
+
+        [Header("Audio Data")]
+        public AudioSource source;
+        public AudioClip SubmitClip;
+
         [Header("")]
         public GameObject Confetti;
         public GameObject submitButton;
+        public GameObject HintButton;
         public GameObject GameOver;
         public GameObject male, female;
 
@@ -41,17 +47,19 @@ namespace HDU.Core
         }
         public void submit()
         {
+            
             if (male.GetComponent<Charecter>().PlaceingNumber == 1 && female.GetComponent<Charecter>().PlaceingNumber == 1 )
             {
+                source.PlayOneShot(SubmitClip, 1);
                 Submited = true;
-                Confetti.SetActive(true);
-                
+                Confetti.SetActive(true);                
             }
             if (male.GetComponent<Charecter>().PlaceingNumber == 0 || female.GetComponent<Charecter>().PlaceingNumber == 0)
             {
                 Submited = true;
             }
             Destroy(submitButton);
+            Destroy(HintButton);
         }
 
         void maleCloth()

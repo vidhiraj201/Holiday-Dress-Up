@@ -28,14 +28,17 @@ namespace HDU.Control
         public bool isMale = false;
 
         public Vector3 PlacingPostion;
+        public Vector3 hintPlace;
         public Vector3 PuffOffset;
 
         private Vector3 initPosition;
-
+        private float countDown = 0;
         // Start is called before the first frame update
         void Start()
         {
-            if(!isDummy)
+            countDown = 0;
+
+            if (!isDummy)
                 SMR = transform.GetComponent<SkinnedMeshRenderer>();
 
             if (isDummy)
@@ -47,15 +50,23 @@ namespace HDU.Control
         // Update is called once per frame
         void Update()
         {
-            /*            if (!isDummy)
-                            clothCheck();*/
+            if (countDown >= 0)
+            {
+                countDown -= Time.deltaTime;
+                clothCheck();
+
+            }
+
+
+            if (WO != null)
+                WO.characterData.checkFM();
 
             if (Input.GetMouseButtonUp(0))
             {
                 clothCheck();
             }
-            
-            if (isDummy && !transform.GetComponent<objectMove>().isMoving && WO == null)
+
+            if (isDummy && !transform.GetComponent<objectMove>().isMoving && WO == null && countDown<=0)
             {
                 ResetPosition();
             }
@@ -162,6 +173,7 @@ namespace HDU.Control
         public void AfterRemovingCloth()
         {
             clothRemoved();
+            //WO.characterData.resetAnimation();
             MR.enabled = true;
             transform.GetComponent<Collider>().isTrigger = true;
         }
@@ -173,8 +185,8 @@ namespace HDU.Control
 
         private void OnTriggerStay(Collider other)
         {
-            WO = other.GetComponent<wearableObject>();
-
+            if (WO == null)
+                WO = other.GetComponent<wearableObject>();
         }
 
         private void OnTriggerExit(Collider other)
@@ -185,8 +197,20 @@ namespace HDU.Control
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!transform.GetComponent<objectMove>().isMoving && other.gameObject.CompareTag("Rack")) ;
-                ResetPosition();
+            if(WO==null)
+                WO = other.GetComponent<wearableObject>();
+
+            /* if (!transform.GetComponent<objectMove>().isMoving && other.gameObject.CompareTag("Rack")) ;
+                 ResetPosition();*/
+        }
+
+
+        
+        public void HintButton()
+        {
+            countDown = 1;
+            transform.localPosition = hintPlace;
+            clothCheck();
         }
     }
 }
