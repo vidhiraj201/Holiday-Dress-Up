@@ -22,6 +22,7 @@ namespace HDU.Core
         [Header("Audio Data")]
         public AudioSource source;
         public AudioClip SubmitClip;
+        public AudioClip ClothClip;
 
         [Header("")]
         public GameObject Confetti;

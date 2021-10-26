@@ -62,10 +62,8 @@ namespace HDU.Movement
                         {
                             if (selectedObject.GetComponent<wearableObject>().rePosition)
                             {
-                                print("Working");
                                 selectedObject.GetComponent<wearableObject>().AfterRemovingCloth();
                                 selectedObject.GetComponent<wearableObject>().rePosition = false;
-                                print("Working_1");
                             }
                         }
                     }

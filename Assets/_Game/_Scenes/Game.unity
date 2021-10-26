@@ -1209,6 +1209,7 @@ MonoBehaviour:
   FLowerTorso: 1
   source: {fileID: 505813318}
   SubmitClip: {fileID: 8300000, guid: 29edd413986726b419551727b5812696, type: 3}
+  ClothClip: {fileID: 8300000, guid: e54ea3dc2f18f3c4e9d2e392c5f750bb, type: 3}
   Confetti: {fileID: 2012927347}
   submitButton: {fileID: 1618392833}
   HintButton: {fileID: 1526160703}

@@ -119,6 +119,8 @@ namespace HDU.Control
                             WO.characterData.LowerTorso = false;
                     }
 
+
+                    FindObjectOfType<GameManager>().source.PlayOneShot(FindObjectOfType<GameManager>().ClothClip, 1);
                     Destroy(Instantiate(WO.characterData.SmokeFuff, transform.position + PuffOffset, Quaternion.identity), 2f);
                     transform.GetComponent<Collider>().isTrigger = false;
                     MR.enabled = false;
@@ -176,11 +178,13 @@ namespace HDU.Control
             //WO.characterData.resetAnimation();
             MR.enabled = true;
             transform.GetComponent<Collider>().isTrigger = true;
+            FindObjectOfType<GameManager>().source.PlayOneShot(FindObjectOfType<GameManager>().ClothClip, 1);
         }
 
         public void ResetPosition()
         {            
             transform.position = initPosition;
+            
         }
 
         private void OnTriggerStay(Collider other)
