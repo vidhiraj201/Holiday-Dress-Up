@@ -13,13 +13,20 @@ namespace HDU.Movement
 
         public LayerMask layer;
         public bool isMoving = false;
+        public objectMove other1;
         private void Update()
         {
-            if (isMoving)
+            if (!other1.isMoving)
             {
-                transform.position = GetMouseAsWorldPoint() + mOffset;
-            }
-            raycastDragObject();
+                if (isMoving)
+                {
+                    transform.position = GetMouseAsWorldPoint() + mOffset;
+                }
+                raycastDragObject();
+            }          
+            if (Input.GetMouseButtonUp(0))
+                isMoving = false;
+
         }
         void OnMouseDown()
         {

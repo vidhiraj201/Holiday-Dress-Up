@@ -15,7 +15,7 @@ namespace HDU.Core
         private bool oneStar, twoStar, threeStar;
         void Start()
         {
-            anime = GetComponent<Animator>();
+            //anime = GetComponent<Animator>();
 /*            for(int i = 0; i <= star.Count-1; i++)
             {
                 star[i].SetActive(false);

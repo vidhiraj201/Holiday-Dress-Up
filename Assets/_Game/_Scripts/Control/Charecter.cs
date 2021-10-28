@@ -18,7 +18,7 @@ namespace HDU.Control
         public Charecter otherCharacter;
 
         private GameManager gm;
-        private bool walkahead = false;
+        public bool walkahead = false;
 
 
 
@@ -83,31 +83,15 @@ namespace HDU.Control
                 if (otherCharacter.transform.parent.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("IN"))
                 {
                     otherCharacter.transform.parent.GetComponent<Animator>().SetBool("out", true);
+                    otherCharacter.Animation.Play("WalkBack");
                     otherCharacter.transform.parent.GetComponent<Animator>().SetBool("in", false);
                 }
                 if (!transform.parent.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("IN"))
                     transform.parent.GetComponent<Animator>().SetBool("in", true);
                 walkahead = true;
             }
-        }
-
-        public void resetAnimation()
-        {
-            if (walkahead)
-            {
-                otherCharacter.transform.parent.GetComponent<Animator>().Play("Walking");
-                if (Animation.GetCurrentAnimatorStateInfo(0).IsName("IN"))
-                {
-                    Animation.SetBool("out", true);
-                    Animation.SetBool("in", false);
-                }
-                if (!Animation.GetCurrentAnimatorStateInfo(0).IsName("IN"))
-                    Animation.SetBool("in", true);
-                walkahead = false;
-            }
-        }
+        } 
     }
-
 }
 
 

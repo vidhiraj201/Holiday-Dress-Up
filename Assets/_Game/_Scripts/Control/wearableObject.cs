@@ -59,11 +59,12 @@ namespace HDU.Control
 
 
             if (WO != null)
-                WO.characterData.checkFM();
+                
 
             if (Input.GetMouseButtonUp(0))
             {
-                clothCheck();
+                    WO.characterData.checkFM();
+                    clothCheck();
             }
 
             if (isDummy && !transform.GetComponent<objectMove>().isMoving && WO == null && countDown<=0)
