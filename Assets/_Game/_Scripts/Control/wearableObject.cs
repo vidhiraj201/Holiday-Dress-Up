@@ -41,8 +41,8 @@ namespace HDU.Control
             if (!isDummy)
                 SMR = transform.GetComponent<SkinnedMeshRenderer>();
 
-            if (isDummy)
-                MR = transform.GetComponent<MeshRenderer>();
+           /* if (isDummy)
+                MR = transform.GetComponent<MeshRenderer>();*/
 
             initPosition = transform.position;
         }
@@ -53,7 +53,7 @@ namespace HDU.Control
             if (countDown >= 0)
             {
                 countDown -= Time.deltaTime;
-                clothCheck();
+                //clothCheck();
 
             }
 
@@ -64,7 +64,7 @@ namespace HDU.Control
             if (Input.GetMouseButtonUp(0))
             {
                     WO.characterData.checkFM();
-                    clothCheck();
+                    //clothCheck();
             }
 
             if (isDummy && !transform.GetComponent<objectMove>().isMoving && WO == null && countDown<=0)
@@ -123,9 +123,6 @@ namespace HDU.Control
 
                     FindObjectOfType<GameManager>().source.PlayOneShot(FindObjectOfType<GameManager>().ClothClip, 1);
                     Destroy(Instantiate(WO.characterData.SmokeFuff, transform.position + PuffOffset, Quaternion.identity), 2f);
-                    transform.GetComponent<Collider>().isTrigger = false;
-                    MR.enabled = false;
-                    rePosition = true;
                     
                 }
             }
@@ -142,6 +139,10 @@ namespace HDU.Control
                 {
                     WO.SMR.enabled = false;
                     WO.isClothPlaced = false ;
+                    if (isFemale)
+                        WO.characterData.FemaleCloth = false;
+                    if (isMale)
+                        WO.characterData.MaleCloth = false;
                     /*WO.characterData.Animation.SetTrigger("place");*/
                     if (WO.isFemale == isFemale || WO.isMale == isMale)
                     {
@@ -176,9 +177,11 @@ namespace HDU.Control
         public void AfterRemovingCloth()
         {
             clothRemoved();
+            WO = null;
+
             //WO.characterData.resetAnimation();
-            MR.enabled = true;
-            transform.GetComponent<Collider>().isTrigger = true;
+            /*MR.enabled = true;
+            transform.GetComponent<Collider>().isTrigger = true;*/
             FindObjectOfType<GameManager>().source.PlayOneShot(FindObjectOfType<GameManager>().ClothClip, 1);
         }
 
